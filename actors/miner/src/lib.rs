@@ -2508,18 +2508,6 @@ impl Actor {
         // Note: this cannot terminate pre-committed but un-proven sectors.
         // They must be allowed to expire (and deposit burnt).
 
-        {
-            let policy = rt.policy();
-            if params.terminations.len() as u64 > policy.declarations_max {
-                return Err(actor_error!(
-                    illegal_argument,
-                    "too many declarations when terminating sectors: {} > {}",
-                    params.terminations.len(),
-                    policy.declarations_max
-                ));
-            }
-        }
-
         let mut to_process = DeadlineSectorMap::new();
 
         for term in params.terminations {
@@ -2649,18 +2637,6 @@ impl Actor {
     }
 
     fn declare_faults(rt: &impl Runtime, params: DeclareFaultsParams) -> Result<(), ActorError> {
-        {
-            let policy = rt.policy();
-            if params.faults.len() as u64 > policy.declarations_max {
-                return Err(actor_error!(
-                    illegal_argument,
-                    "too many fault declarations for a single message: {} > {}",
-                    params.faults.len(),
-                    policy.declarations_max
-                ));
-            }
-        }
-
         let mut to_process = DeadlineSectorMap::new();
 
         for term in params.faults {
@@ -2782,18 +2758,6 @@ impl Actor {
         rt: &impl Runtime,
         params: DeclareFaultsRecoveredParams,
     ) -> Result<(), ActorError> {
-        {
-            let policy = rt.policy();
-            if params.recoveries.len() as u64 > policy.declarations_max {
-                return Err(actor_error!(
-                    illegal_argument,
-                    "too many recovery declarations for a single message: {} > {}",
-                    params.recoveries.len(),
-                    policy.declarations_max
-                ));
-            }
-        }
-
         let mut to_process = DeadlineSectorMap::new();
 
         for term in params.recoveries {
